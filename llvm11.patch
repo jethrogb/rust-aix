@@ -1,0 +1,29 @@
+diff --git a/llvm/lib/CodeGen/TargetLoweringObjectFileImpl.cpp b/llvm/lib/CodeGen/TargetLoweringObjectFileImpl.cpp
+index 27bebe5..0bbd630 100644
+--- a/llvm/lib/CodeGen/TargetLoweringObjectFileImpl.cpp
++++ b/llvm/lib/CodeGen/TargetLoweringObjectFileImpl.cpp
+@@ -2006,7 +2006,7 @@ TargetLoweringObjectFileXCOFF::getTargetSymbol(const GlobalValue *GV,
+ 
+ MCSection *TargetLoweringObjectFileXCOFF::getExplicitSectionGlobal(
+     const GlobalObject *GO, SectionKind Kind, const TargetMachine &TM) const {
+-  report_fatal_error("XCOFF explicit sections not yet implemented.");
++  report_fatal_error("XCOFF explicit sections not yet implemented. Section name: " + Twine(GO->getSection()));
+ }
+ 
+ MCSection *TargetLoweringObjectFileXCOFF::getSectionForExternalReference(
+diff --git a/llvm/lib/MC/MCXCOFFStreamer.cpp b/llvm/lib/MC/MCXCOFFStreamer.cpp
+index ec9e89f..00450f3 100644
+--- a/llvm/lib/MC/MCXCOFFStreamer.cpp
++++ b/llvm/lib/MC/MCXCOFFStreamer.cpp
+@@ -54,8 +54,10 @@ bool MCXCOFFStreamer::emitSymbolAttribute(MCSymbol *Sym,
+   case llvm::MCSA_Protected:
+     Symbol->setVisibilityType(XCOFF::SYM_V_PROTECTED);
+     break;
++  case llvm::MCSA_Cold:
++    return false;
+   default:
+-    report_fatal_error("Not implemented yet.");
++    report_fatal_error("XCOFF doesn't yet implement symbol attribute of type #" + Twine(Attribute));
+   }
+   return true;
+ }

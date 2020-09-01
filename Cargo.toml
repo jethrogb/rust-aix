@@ -1,0 +1,23 @@
+[package]
+name = "smalllib"
+version = "0.1.0"
+authors = ["Fortanix"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+core = { path = "../rust/library/core" }
+compiler_builtins = { version = "*", features = ["rustc-dep-of-std"] }
+
+[patch.crates-io.rustc-std-workspace-core]
+path = "../rust/library/rustc-std-workspace-core"
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
